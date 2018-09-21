@@ -4,5 +4,7 @@ channels:
     - conda-forge
 
 dependencies:
+    - pytest
+    - pytest-cov
     - python-coveralls
     - Cython >= 0.27.3
