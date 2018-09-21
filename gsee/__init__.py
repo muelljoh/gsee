@@ -1,4 +1,4 @@
-__title__ = 'gsee -- global solar energy estimator'
+__title__ = 'GSEE -- Global Solar Energy Estimator'
 __author__ = 'Stefan Pfenninger'
 
 from gsee._version import __version__

@@ -1,6 +1,6 @@
 # GSEE: global solar energy estimator
 
-`GSEE` is a small solar energy simulation library designed for speed and ease of use. [Renewables.ninja](https://www.renewables.ninja/) PV data is generated with `GSEE`.
+`GSEE` is a solar energy simulation library designed for speed and ease of use. [Renewables.ninja](https://www.renewables.ninja/) PV data is generated with `GSEE`.
 
 ## Requirements
 
@@ -11,7 +11,6 @@ Works only with Python 3. Required libraries:
 * [scipy](https://scipy.org/)
 * [pandas](https://pandas.pydata.org/)
 * [xarray](https://xarray.pydata.org/)
-* [joblib](https://pypi.org/project/joblib/)
 
 ## Installation
 
@@ -38,7 +37,7 @@ A plant simulation model implements a model class (e.g. ``PVPlant``) with the re
 
 ### Power output from a PV system with fixed panels
 
-In this example, ``data`` must be a pandas.DataFrame with columns ``global_horizontal`` (in kW/m2), ``diffuse_fraction``, and optionally a ``temperature`` column for ambient air temperature (in degrees Celsius).
+In this example, ``data`` must be a pandas.DataFrame with columns ``global_horizontal`` (in W/m2), ``diffuse_fraction``, and optionally a ``temperature`` column for ambient air temperature (in degrees Celsius).
 
 ```python
 result = gsee.pv.run_model(
@@ -47,7 +46,7 @@ result = gsee.pv.run_model(
     tilt=30, # 30 degrees tilt angle
     azim=180,  # facing towards equator,
     tracking=0,  # fixed - no tracking
-    capacity=1,  # 1kW
+    capacity=1000,  # 1000 W
 )
 ```
 
@@ -64,17 +63,17 @@ plane_irradiance = gsee.trigon.aperture_irradiance(
 ### Climate data Interface
 
 ```python
-def run_interface(ghi_tuple: tuple, outfile: str, params, diffuse_tuple=('', ''),
+def run_interface(ghi_tuple: tuple, outfile: str, params: dict, diffuse_tuple=('', ''),
                   temp_tuple=('', ''), timeformat='other', use_pdfs=True,
-                  rad_factor=(1 / 1000), pdfs_file_path='',
-                  num_cores=multiprocessing.cpu_count()):
+                  pdfs_file_path='', num_cores=multiprocessing.cpu_count()):
 ```
 
 Instead of letting the script read and prepare the data, a xarray dataset can also be passed directly to the following function (e.g. when using the module in combination with a larger application):
 
 ```python
-def run_interface_from_dataset(ds, params, use_pdfs=True, pdfs_file_path='',
-                              num_cores=multiprocessing.cpu_count()):
+def run_interface_from_dataset(ds_in: xr.Dataset, params: dict, use_pdfs=True,
+                                pdfs_file_path='', num_cores=multiprocessing.cpu_count())
+                                 -> xr.Dataset:
 ```
 
 For more information, see the [climate data interface documentation](docs/climatedata-interface.md).
@@ -85,7 +84,7 @@ To install the latest development version directly from GitHub:
 
     pip install -e git+https://github.com/renewables-ninja/gsee.git#egg=gsee
 
-To build the climatedata_interface submodule, [Cython](http://cython.org/) (>= 0.27.3) is required.
+To build the `climatedata_interface` submodule, [Cython](http://cython.org/) is required.
 
 ## Credits and contact
 

@@ -197,7 +197,7 @@ def run_model(
     Returns
     -------
     result : pandas Series
-        Electric output from PV system in W per hour.
+        Electric output from PV system in each hour (W).
 
     """
     if (system_loss < 0) or (system_loss > 1):
@@ -228,7 +228,7 @@ def run_model(
     # specific panel types
     panel_class = _PANEL_TYPES[technology]
     panel_efficiency = 0.1
-    area_per_capacity = 1 / panel_efficiency
+    area_per_capacity = 0.001 / panel_efficiency
 
     # TODO allow panel_aperture to change through day as shading takes place
     panel = panel_class(panel_aperture=capacity * area_per_capacity,
@@ -240,7 +240,7 @@ def run_model(
     output = panel.panel_power(irrad.direct,
                                irrad.diffuse,
                                tamb)
-    sim = pd.Series(output, index=datetimes) * (1 - system_loss)
+    sim = pd.Series(output, index=datetimes).clip_upper(capacity) * (1 - system_loss)
     if include_raw_data:
         items = [
             ('output', sim),
